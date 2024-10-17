@@ -1,0 +1,6 @@
+- name: dummy1
+  url: https://www.youtube.com/playlist?list=xxxxxx
+  directory: /path
+- name: dummy2
+  url: https://www.youtube.com/playlist?list=xxxxxxx
+  directory: /path
