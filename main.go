@@ -42,7 +42,8 @@ func (c *Channel) download(wg *sync.WaitGroup) {
 		CookiesFromBrowser("chrome").
 		Paths(c.Directory).
 		DownloadArchive(filepath.Join(c.Directory, "download")).
-		Output("%(upload_date)s_%(title)s.%(ext)s")
+		Output("%(upload_date)s_%(title)s.%(ext)s").
+		SetExecutable("/usr/local/bin/yt-dlp")
 
 	_, err := dl.Run(context.TODO(), c.URL)
 	if err != nil {
