@@ -36,18 +36,23 @@ func (t *Targets) getChannels() []Channel {
 
 func (c *Channel) download(wg *sync.WaitGroup) {
 	dl := ytdlp.New().
-		FormatSort("asr,abr,res,ext:webm:ogg").
+		//FormatSort("asr,abr,res,ext:webm:ogg").
+		Format("bestvideo+251/140/139").
 		EmbedThumbnail().
 		EmbedMetadata().
 		CookiesFromBrowser("chrome").
 		Paths(c.Directory).
-		DownloadArchive(filepath.Join(c.Directory, "download")).
+		DownloadArchive(filepath.Join(c.Directory, "downloaded")).
 		Output("%(upload_date)s_%(title)s.%(ext)s").
 		SetExecutable("/usr/local/bin/yt-dlp")
 
-	_, err := dl.Run(context.TODO(), c.URL)
+	res, err := dl.Run(context.TODO(), c.URL)
 	if err != nil {
-		panic(err)
+		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, res.Stderr)
+	} else {
+		fmt.Fprintln(os.Stdout, res.Stdout)
+		fmt.Fprintln(os.Stdout, res.OutputLogs)
 	}
 
 	wg.Done()
