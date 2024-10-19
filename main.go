@@ -52,7 +52,6 @@ func (c *Channel) download(wg *sync.WaitGroup) {
 		fmt.Fprintln(os.Stderr, res.Stderr)
 	} else {
 		fmt.Fprintln(os.Stdout, res.Stdout)
-		fmt.Fprintln(os.Stdout, res.OutputLogs)
 	}
 
 	wg.Done()
@@ -68,5 +67,4 @@ func main() {
 		go channel.download(&wg)
 	}
 	wg.Wait()
-	fmt.Println(channels)
 }
