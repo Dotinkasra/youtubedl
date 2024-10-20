@@ -34,7 +34,33 @@ func (t *Targets) getChannels() []Channel {
 	return config
 }
 
+func (c *Channel) existsDir() bool {
+	info, err := os.Stat(c.Directory)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return false
+	}
+	if !info.IsDir() {
+		fmt.Fprintln(os.Stderr, c.Directory+" is not directory")
+		return false
+	}
+	fmt.Fprintln(os.Stdout, c.Directory+" is existed")
+	return true
+}
+
+func (c *Channel) createDir() {
+	error := os.Mkdir(c.Directory, 0750)
+	if error != nil && !os.IsExist(error) {
+		fmt.Fprintln(os.Stderr, error)
+	}
+	fmt.Fprintln(os.Stdout, "Created "+c.Directory)
+}
+
 func (c *Channel) download(wg *sync.WaitGroup) {
+	if !c.existsDir() {
+		c.createDir()
+	}
+
 	dl := ytdlp.New().
 		//FormatSort("asr,abr,res,ext:webm:ogg").
 		Format("bestvideo+251/140/139").
